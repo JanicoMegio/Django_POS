@@ -1,0 +1,40 @@
+<style>
+  #pay_modal .modal-footer {
+        display: none
+    }
+</style>
+
+<div class="container-fluid">
+    <form action="{%url 'record_csv' %}" method='POST'id="csv-form">
+      {% csrf_token %}
+       <div class="form-group mb-3">
+            <label for="product-id">Select Category</label>
+                <select name="category-list" id="product-id"class="form-select form-select-sm">
+                      <option value=""></option>
+                      {% for product in product_list %}
+                          <option  name="category-list"  value="{{ product }}">{{ product }}</option>
+                      {% endfor %}
+                  </select>
+            </div>
+            <div class="form-group mb-3">
+                <label for="product-id">Select Action</label>
+                  <select name="inventoryaction"class="form-select form-select-sm">
+                     <option value=""></option>
+                      <option value="IN">IN</option>
+                      <option value="OUT">OUT</option>
+                  </select>
+            </div>
+            <div class="form-group mb-3">
+              <label for="from" class="control-label">FROM</label>
+              <input type="date" name="fromdate"  class="form-control form-control-sm rounded-0" required>
+            </div>
+            <div class="form-group mb-3">
+                <label for="to" class="control-label">TO</label>
+                <input type="date" name="todate" class="form-control form-control-sm rounded-0" required>
+            </div>
+            <div class="d-flex w-100 justify-content-end">
+              <button type="submit" class="btn btn-light bg-gradient border rounded-0 btn-sm me-1" id="receipt_print"><i class="mdi mdi-printer"></i> Save </button>
+              <button class="btn btn-secondary bg-gradient border rounded-0 btn-sm" type="button" data-bs-dismiss="modal"><i class="mdi mdi-close"></i> Close</button>
+            </div>
+    </form>
+</div>

@@ -1,0 +1,20 @@
+{% extends "posApp/base.html" %} {% block pageContent %} {% load static %}
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12 rounded shadow-lg">
+    <div class="mdc-card align-items-center rounded-4">
+        <h1 class="fs-1 text-dark">Backup and Restore</h1>
+         <img src="{% static 'posApp/assets/material-admin/images/restore.gif' %}" alt="logo" height="500" width="500"class="rounded mx-auto d-block img-fluid">
+         <p class="text-muted text-center">Automatically backup the system in every 30 minutes. Just click the button to Restore</p>
+          <form action="{%url 'restore_database' %}" method="POST"  >
+            {% csrf_token %}
+           <div class="input-group mb-3">
+              <input type="password" class="form-control" placeholder="Password to Authenticate "aria-describedby="basic-addon2" name="password" required>
+              <div class="input-group-append">
+                <button class="btn btn-outline-info" type="submit">Restore</button>
+              </div>
+            </div>
+          </form>
+          
+    </div>
+</div>
+{% endblock pageContent%}
+

@@ -1,0 +1,360 @@
+{% extends "posApp/base.html" %} {% load humanize %} {% block pageContent %}{%if user.is_superuser%}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <div class="mdc-card py-3 rounded-4">
+        <div class="d-flex justify-content-between">
+            <h3 class="card-title fs-2 mb-1">Dashboard</h3>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <hr class="w-100">
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-6-tablet bg-white p-3 rounded-5">
+    <div class="mdc-card info-card info-card--success rounded-4 shadow-lg">
+        <canvas id="barChart"></canvas>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-6-tablet bg-white p-3 rounded-5">
+    <div class="mdc-card info-card info-card--success rounded-4 shadow-lg">
+        <canvas id="pieChart"></canvas>
+    </div>  
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet">
+    <div class="mdc-card info-card info-card--success rounded-4 shadow-lg">
+        <div class="card-inner">
+            <h5 class="card-title">Categories</h5>
+            <h5 class="font-weight-bold fs-5 pb-2 mb-1 border-bottom">{{ categories|intcomma }}</h5>
+            <p class="tx-12 text-muted">Over All Count of Categories</p>
+            <div class="card-icon-wrapper rounded-4">
+                <i class="material-icons">list</i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet ">
+    <div class="mdc-card info-card info-card--primary rounded-4 shadow-lg">
+        <div class="card-inner">
+            <h5 class="card-title">Products</h5>
+            <h5 class="font-weight-bold fs-5 pb-2 mb-1 border-bottom">{{ products|intcomma }}</h5>
+            <p class="tx-12 text-muted">Over All Count of Products</p>
+            <div class="card-icon-wrapper rounded-4">
+                <i class="material-icons">label</i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet">
+    <div class="mdc-card info-card info-card--info rounded-4 shadow-lg">
+        <div class="card-inner">
+            <h5 class="card-title">Today's Transactions</h5>
+            <h5 class="font-weight-bold fs-5 pb-2 mb-1 border-bottom">{{ transaction}}</h5>
+            <p class="tx-12 text-muted">Over All Count of Today's Transactions</p>
+            <div class="card-icon-wrapper rounded-4">
+                <i class="material-icons">receipt</i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet">
+    <div class="mdc-card info-card info-card--warning rounded-4 shadow-lg">
+        <div class="card-inner">
+            <h5 class="card-title">Today's Sales</h5>
+            <h5 class="font-weight-bold fs-5 pb-2 mb-1 border-bottom">₱ {{ total_sales|floatformat:2|intcomma }}</h5>
+            <p class="tx-12 text-muted">Total Sales Today</p>
+            <div class="card-icon-wrapper rounded-4">
+                <i class="mdi mdi-cash-multiple"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //bar
+var ctxB = document.getElementById("barChart").getContext('2d');
+var myBarChart = new Chart(ctxB, {
+  type: 'bar',
+  data: {
+    labels:[{% for product in product_listed%} '{{product.code}} {{product.name}}', {% endfor %}],
+    datasets: [{
+      label: 'Product Sales',
+      data: [{% for product in product_list%} '{{product.chart_stock}}', {% endfor %}],
+      backgroundColor: [
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)',
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)',
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)',
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)'
+      ],
+      borderColor: [
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)',
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)',
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)',
+        'rgba(231, 242, 186, 1)',
+        'rgba(3, 250, 158, 1)',
+        'rgba(84, 246, 239, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(26, 145, 94, 1)',
+        'rgba(21, 3, 240, 1)',
+        'rgba(85, 60, 154, 1)',
+        'rgba(137, 186, 92, 1)',
+        'rgba(211, 29, 15, 1)',
+        'rgba(68, 217, 117, 1)',
+        'rgba(25, 195, 167, 1)',
+        'rgba(9, 59, 230, 1)',
+        'rgba(240, 2, 200, 1)',
+        'rgba(19, 68, 160, 1)',
+        'rgba(96, 123, 44, 1)',
+        'rgba(84, 243, 105, 1)',
+        'rgba(69, 24, 254, 1)',
+        'rgba(199, 190, 29, 1)',
+        'rgba(153, 250, 130, 1)',
+        'rgba(29, 39, 67, 1)',
+        'rgba(226, 38, 98, 1)',
+        'rgba(215, 79, 62, 1)',
+        'rgba(175, 42, 138, 1)',
+        'rgba(152, 102, 175, 1)',
+        'rgba(246, 132, 157, 1)',
+        'rgba(128, 27, 23, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    legend: {
+        display: false
+    },
+    title: {
+        display: true,
+        text: 'Sold Product'
+    },
+    scales: {
+        xAxes: [{display: false}],
+        yAxes: [{display: false}],
+      yAxes: [{
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+});
+var ctxP = document.getElementById("pieChart").getContext('2d');
+var myPieChart = new Chart(ctxP, {
+  type: 'line',
+  data: {
+    labels:[{% for values in value %} '{{ values }}', {% endfor%}],
+    datasets: [{
+        label: 'Product Sales',
+        fill: false,
+      data: [{% for keys in key%} '{{ keys }}', {% endfor %}],
+      backgroundColor: [
+        'rgba(19, 68, 160, 1)'
+      ],
+      borderColor: [
+        'rgba(25, 195, 167, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    title: {
+        display: true,
+        text: 'Daily Sales'
+    },
+     legend: {
+        display: false,
+  },
+    responsive: true,
+    maintainAspectRatio: false,
+  }
+});
+
+</script>
+{%else%}
+{% include 'posApp/about.html'%}
+{%endif%}
+{% endblock pageContent %}

@@ -1,0 +1,43 @@
+{% block pageContent %}{% load static %}{% load humanize %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
+
+<div class="mdc-layout-grid__cell--span-12 justify-content-center">
+    <img src="{% static 'posApp/assets/material-admin/images/picture1.png' %}" alt="logo" height="400" width="350"class="rounded mx-auto d-block img-fluid">
+</div>
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-12">
+    <hr class="w-100">
+</div>
+<div class="mdc-layout-grid__cell--span-12 text-center">
+    <div class="mdc-card rounded-4">
+        <h1 class="display-1"><small class="text-muted">Welcome, </small>{{ user.first_name }}</h1>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-3-tablet">
+    <div class="mdc-card info-card info-card--info rounded-4 shadow-lg">
+        <div class="card-inner">
+            <h5 class="card-title">Today's Transactions</h5>
+            <h5 class="font-weight-bold fs-5 pb-2 mb-1 border-bottom">{{ transaction}}</h5>
+            <p class="tx-12 text-muted">Over All Count of Today's Transactions</p>
+            <div class="card-icon-wrapper rounded-4">
+                <i class="material-icons">receipt</i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mdc-layout-grid__cell stretch-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-3-tablet">
+    <div class="mdc-card info-card info-card--warning rounded-4 shadow-lg">
+        <div class="card-inner">
+            <h5 class="card-title">Today's Sales</h5>
+            <h5 class="font-weight-bold fs-5 pb-2 mb-1 border-bottom">₱ {{ total_sales|floatformat:2|intcomma }}</h5>
+            <p class="tx-12 text-muted">Total Sales Today</p>
+            <div class="card-icon-wrapper rounded-4">
+                <i class="mdi mdi-cash-multiple"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock pageContent %}
